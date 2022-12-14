@@ -1,0 +1,28 @@
+{
+  "name": "permaloom",
+  "version": "1.0.0",
+  "description": "Node.js API that archives webpages, links, and sources to Arweave from URLs.",
+  "main": "src/index.js",
+  "bin": {
+    "permaloom": "bin/permaloom.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Moogamouth/Permaloom.git"
+  },
+  "author": "Moogamouth",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/Moogamouth/Permaloom/issues"
+  },
+  "homepage": "https://github.com/Moogamouth/Permaloom#readme",
+  "dependencies": {
+    "arweave": "^1.11.6",
+    "yukikaki": "^0.1.0",
+    "meow": "^11.0.0",
+    "prompt-sync": "^4.2.0"
+  }
+}
