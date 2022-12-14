@@ -1,5 +1,6 @@
+import meow from "meow";
 (async () => {
-    const cli = require("meow")(`
+    const cli = meow(`
     Usage
     $ archive <url>
 

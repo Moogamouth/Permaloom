@@ -3,7 +3,7 @@ class Permaloom {
 	constructor(headless) {
 		return Promise.resolve()
 		.then(async () => {
-			this.yukikaki = await new (await require("./copy.js"))(headless);
+			this.yukikaki = await new (await require("yukikaki"))(headless);
 			this.arweave = await require("arweave").init({
 				host: "arweave.net",
 				port: 443,

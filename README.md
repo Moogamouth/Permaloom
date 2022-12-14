@@ -22,7 +22,7 @@ This API is heavily based on the Yukikaki API.
 
 ## API
 
-### class Yukikaki(headless)
+### class Permaloom(headless)
 
 #### headless
 Optional. Specifies whether to run the scraper in headless mode.
@@ -44,6 +44,9 @@ The data that has been scraped from the current page.
 
 ###### options
 The options object passed into .scrape().
+
+#####
+Tip: You can set options.i to 0 to disable scraping for sources and links of the page currently being crawled.
 
 #### options.key
 `Object`
