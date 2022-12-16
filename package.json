@@ -1,6 +1,6 @@
 {
   "name": "permaloom",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Node.js API that archives webpages, links, and sources to Arweave from URLs.",
   "main": "src/index.js",
   "bin": {
