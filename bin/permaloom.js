@@ -1,4 +1,6 @@
 import meow from "meow";
+import {Permaloom} from "../src/index.js";
+import promptSync from "prompt-sync";
 (async () => {
     const cli = meow(`
     Usage
@@ -9,35 +11,36 @@ import meow from "meow";
 
     url [string]
     key [string] Key object string
+    maxFee [number] Maximum fee in Winston. If the fee of upload is higher than maxFee, it will be cancelled.
     --i, -i
     --hrefs, -h
     --after, -a
     --userInput, -u Pauses crawler before crawling. Unpauses when enter is inputted into the command line. You can use this option to do things such as signing into a site.
 
     Examples
-    $ archive https://www.youtube.com/watch?v=jNQXAC9IVRw <key> -i 1 -h -a 1588230344423
+    $ archive https://www.youtube.com/watch?v=jNQXAC9IVRw <key> 1000000 -i 1 -h -a 1588230344423 -u
     `, {
+        importMeta: import.meta,
         flags: {
-            i: {type: "number", alias: "i"},
+            i: {type: "number"},
             hrefs: {type: "boolean", alias: "h"},
             after: {type: "number", alias: "a"},
             userInput: {type: "boolean", alias: "u"}
         }
     });
     
-    if (cli.input[1]) key = JSON.parse(JSON.stringify(cli.input[1]));
+    if (cli.input[1]) var key = JSON.parse(JSON.stringify(cli.input[1]));
 
-    const permaloom = await new (await require("../src"))(!cli.flags.userInput);
+    const permaloom = await new (await Permaloom)(!cli.flags.userInput, "arweave.net", 443, "https");
 
-    if (cli.flags.userInput) require("prompt-sync")()();
+    if (cli.flags.userInput) promptSync()();
 
-    const func = async function(options2, res) {
-        permaloom.draftTx(options2, res); //Wait, will this input this from the permaloom here? or look for one in yukikaki?
-    }
-    data = await permaloom.scrape({url: cli.input[0], func: func, key: key, i: cli.flags.i, hrefs: cli.flags.hrefs, after: cli.flags.after});
-    fee = 0;
-    for (i of data) fee += i.reward;
-    if (fee < maxFee) {
+    const func = async function(options, res, page) {await permaloom.draftTx(options, res, page);}
+    const data = await permaloom.scrape({url: cli.input[0], func: func, key: key, i: cli.flags.i, hrefs: cli.flags.hrefs, after: cli.flags.after});
+
+    let fee = 0;
+    for (let i of data) fee += i.reward;
+    if (fee < cli.input[2]) {
         for (i of data) {
             const uploader = await permaloom.arweave.transactions.getUploader(await permaloom.arweave.transactions.sign(i, options2.key));
             while (!uploader.isComplete) await uploader.uploadChunk();

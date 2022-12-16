@@ -19,9 +19,10 @@
     "url": "https://github.com/Moogamouth/Permaloom/issues"
   },
   "homepage": "https://github.com/Moogamouth/Permaloom#readme",
+  "type": "module",
   "dependencies": {
-    "arweave": "^1.11.6",
     "yukikaki": "^0.1.0",
+    "arweave": "^1.11.6",
     "meow": "^11.0.0",
     "prompt-sync": "^4.2.0"
   }

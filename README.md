@@ -34,19 +34,23 @@ Crawls webpage according to options.url.
 `String`
 The URL to archive.
 
-##### options.func(res, options)
+##### options.func(res, options, page)
 `Function`
 The function to run on scraper data. These parameters will be passed into options.func:
 
 ###### res
-[`<HTTPResponse>`](https://github.com/user/repo/blob/branch/other_file.md)
+[`<HTTPResponse>`](https://pptr.dev/api/puppeteer.httpresponse)
 The data that has been scraped from the current page.
 
 ###### options
 The options object passed into .scrape().
 
+###### page
+[`<Page>`](https://pptr.dev/api/puppeteer.page)
+The current page.
+
 #####
-Tip: You can set options.i to 0 to disable scraping for sources and links of the page currently being crawled.
+Tip: You can set options.hrefs to false inside options.func to disable scraping for sources and links of the page currently being crawled.
 
 #### options.key
 `Object`
@@ -63,3 +67,5 @@ Optional. If true, archive links, links of links, and links of links of links, s
 ##### options.after
 `Int`
 Optional. A Unix date. Only archive pages that have not been archived after this date.
+
+#### .draftTx()
