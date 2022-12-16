@@ -21,8 +21,8 @@
   "homepage": "https://github.com/Moogamouth/Permaloom#readme",
   "type": "module",
   "dependencies": {
-    "yukikaki": "^0.1.0",
-    "arweave": "^1.11.6",
+    "yukikaki": "^0.2.1",
+    "arweave": "^1.11.8",
     "meow": "^11.0.0",
     "prompt-sync": "^4.2.0"
   }
