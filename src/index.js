@@ -16,10 +16,9 @@ export class Permaloom {
 	}
 
 	async draftTx(options, res, page) {
-		//Stop transactions from being undefined
-		const transactions = (await this.arweave.api.post("/graphql", {query: `query{transactions(sort:HEIGHT_DESC,tags:{name:"page:url",values:["${options.url}"]}){edges{node{tags{value}}}}}`})).data.data.transactions.edges[0];
-		console.log(transactions);
-		if (!options.after || !transactions || transactions.node.tags[4].value < options.after) {
+		let transactions = null;
+		while (!transactions) transactions = (await this.arweave.api.post("/graphql", {query: `query{transactions(sort:HEIGHT_DESC,tags:{name:"page:url",values:["${options.url}"]}){edges{node{tags{value}}}}}`})).data.data;
+		if (options.after && transactions.transactions?.edges[0]?.node?.tags[4]?.value && transactions.transactions?.edges[0]?.node?.tags[4]?.value < options.after) {
 			let contentType = res.headers()["content-type"];
 			if (contentType.includes(";")) contentType = contentType.split(";")[0];
 
