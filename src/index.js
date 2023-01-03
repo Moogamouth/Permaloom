@@ -1,12 +1,12 @@
-import yukikaki from "yukikaki";
-import arweave from "arweave";
-export class Permaloom {
+import Yukikaki from "yukikaki";
+import Arweave from "arweave";
+export default class Permaloom {
 
-	constructor(headless, host, port, protocol) {
+	constructor(host, port, protocol, headless) {
 		return Promise.resolve()
 		.then(async () => {
-			this.yukikaki = await new (yukikaki)(headless);
-			this.arweave = await arweave.init({
+			this.yukikaki = await new Yukikaki(headless);
+			this.arweave = await Arweave.init({
 				host: host,
 				port: port,
 				protocol: protocol
@@ -17,8 +17,8 @@ export class Permaloom {
 
 	async draftTx(options, res, page) {
 		let transactions = null;
-		while (!transactions) transactions = (await this.arweave.api.post("/graphql", {query: `query{transactions(sort:HEIGHT_DESC,tags:{name:"page:url",values:["${options.url}"]}){edges{node{tags{value}}}}}`})).data.data;
-		if (options.after && transactions.transactions?.edges[0]?.node?.tags[4]?.value && transactions.transactions?.edges[0]?.node?.tags[4]?.value < options.after) {
+		if (onUpload == false) while (!transactions) transactions = (await this.arweave.api.post("/graphql", {query: `query{transactions(sort:HEIGHT_DESC,tags:{name:"page:url",values:["${options.url}"]}){edges{node{tags{value}}}}}`})).data.data;
+		if (onUpload != false || transactions.transactions?.edges[0]?.node?.tags[4]?.value && transactions.transactions?.edges[0]?.node?.tags[4]?.value < options.after) {
 			let contentType = res.headers()["content-type"];
 			if (contentType.includes(";")) contentType = contentType.split(";")[0];
 
@@ -36,6 +36,24 @@ export class Permaloom {
 		}
 	}
 
-	async scrape(options) {return await this.yukikaki.scrape(options);}
+	async archive(options) {
+		const data = await this.yukikaki.scrape(options);
+		let fee = 0;
+		if (!after || options.onUpload) var data2 = data;
+		else {
+			data2 = [];
+			for (i of data) {
+				while (!transactions) transactions = (await this.arweave.api.post("/graphql", {query: `query{transactions(sort:HEIGHT_DESC,tags:{name:"page:url",values:["${i.tags[2].value}"]}){edges{node{tags{value}}}}}`})).data.data;
+				if (transactions.transactions?.edges[0]?.node?.tags[4]?.value && transactions.transactions?.edges[0]?.node?.tags[4]?.value < options.after) data2.push(i);
+			}
+		}
+		for (let i of data2) fee += i.reward;
+		if (fee < options.maxFee) {
+			for (i of data2) {
+				const uploader = await this.arweave.transactions.getUploader(await this.arweave.transactions.sign(i, options.key));
+				while (!uploader.isComplete) await uploader.uploadChunk();
+			}
+		}
+	}
 
 };

@@ -1,5 +1,5 @@
 import meow from "meow";
-import {Permaloom} from "../src/index.js";
+import Permaloom from "../src/index.js";
 import promptSync from "prompt-sync";
 (async () => {
     const cli = meow(`
@@ -11,7 +11,7 @@ import promptSync from "prompt-sync";
 
     url [string]
     key [string] Key object string
-    maxFee [number] Maximum fee in Winston. If the fee of upload is higher than maxFee, it will be cancelled.
+    maxFee [number]
     --i, -i
     --hrefs, -h
     --after, -a
@@ -24,6 +24,7 @@ import promptSync from "prompt-sync";
         flags: {
             i: {type: "number"},
             hrefs: {type: "boolean", alias: "h"},
+            srcs: {type: "boolean", alias: "s"},
             after: {type: "number", alias: "a"},
             userInput: {type: "boolean", alias: "u"}
         }
@@ -31,19 +32,11 @@ import promptSync from "prompt-sync";
     
     if (cli.input[1]) var key = JSON.parse(JSON.stringify(cli.input[1]));
 
-    const permaloom = await new (await Permaloom)(!cli.flags.userInput, "arweave.net", 443, "https");
+    const permaloom = await new Permaloom("arweave.net", 443, "https", !cli.flags.userInput);
 
     if (cli.flags.userInput) promptSync()();
 
     const func = async function(options, res, page) {await permaloom.draftTx(options, res, page);}
-    const data = await permaloom.scrape({url: cli.input[0], func: func, key: key, i: cli.flags.i, hrefs: cli.flags.hrefs, after: cli.flags.after});
 
-    let fee = 0;
-    for (let i of data) fee += i.reward;
-    if (fee < cli.input[2]) {
-        for (i of data) {
-            const uploader = await permaloom.arweave.transactions.getUploader(await permaloom.arweave.transactions.sign(i, options2.key));
-            while (!uploader.isComplete) await uploader.uploadChunk();
-        }
-    }
+    await permaloom.archive({url: cli.input[0], func: func, key: key, maxFee: cli.input[2], i: cli.flags.i, hrefs: cli.flags.hrefs, srcs: cli.flags.srcs, after: cli.flags.after})
 })();

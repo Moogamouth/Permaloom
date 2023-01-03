@@ -1,5 +1,5 @@
 # Permaloom
-Node.js API that scrapes and crawls webpages.
+Node.js module that archives webpages to Arweave.
 
 ## Installation
 Using [npm](https://www.npmjs.com/):
@@ -8,64 +8,127 @@ Using [npm](https://www.npmjs.com/):
 npm install permaloom
 ```
 
-## Note
-This API is heavily based on the Yukikaki API.
+## Usage
 
-## Examples
+For a better understanding, read the Yukikaki [documentation](https://github.com/Moogamouth/Yukikaki#readme).
 
+You can import Permaloom using `require`:
 ```js
 (async () => {
-    const permaloom = await new (await require("permaloom"))(false);
-    await yukikaki.scrape({url: "https://www.youtube.com/watch?v=jNQXAC9IVRw", key: <key>, i: 1, hrefs: true, after: 1588230344423});
+    const permaloom = new require("permaloom")("arweave.net", 443, "https");
 })();
 ```
 
-## API
+Or with `import`:
+```js
+(async () => {
+    import Permaloom from "permaloom";
+    await const permaloom = new Permaloom("arweave.net", 443, "https");
+})();
+```
 
-### class Permaloom(headless)
+You need to provide values for host, port and protocol.
 
-#### headless
-Optional. Specifies whether to run the scraper in headless mode.
+You can start Permaloom in headful mode using the `headless` parameter like so:
+```js
+(async () => {
+    const permaloom = new require("permaloom")("arweave.net", 443, "https", false);
+})();
+```
 
-#### .scrape([options])
-Crawls webpage according to options.url.
+Or using `import`:
+```js
+(async () => {
+    import permaloom from "permaloom";
+    const permaloom = new permaloom("arweave.net", 443, "https", false);
+})();
+```
 
-##### options.url
+### .archive(options)
+Scrapes data from webpages according to `options`, and archives it to arweave.
+
+#### options.url
 `String`
-The URL to archive.
 
-##### options.func(res, options, page)
+The URL to start crawling from.
+
+#### options.func(options, res, page)
 `Function`
-The function to run on scraper data. These parameters will be passed into options.func:
 
-###### res
+`.archive()` will run `options.func` on every webpage it crawls. `.archive()` will input the following values into `options.func`:
+
+`options`
+
+You can change this value's properties inside of `options.func`, except for `options.func` and `options.url`.
+
+Note: `options.i` will be decremented based on how many links or sources away the page is from the starting page.
+
+`res`
 [`<HTTPResponse>`](https://pptr.dev/api/puppeteer.httpresponse)
-The data that has been scraped from the current page.
 
-###### options
-The options object passed into .scrape().
+Puppeteer response from the current page.
 
-###### page
+`page`
 [`<Page>`](https://pptr.dev/api/puppeteer.page)
-The current page.
 
-#####
-Tip: You can set options.hrefs to false inside options.func to disable scraping for sources and links of the page currently being crawled.
+Puppeteer page of the current page.
+
+#### options.maxFee
+`Int`
+
+The maximum fee to pay for the archive, in winston. The archive will cancel if the amount is exceeded.
+
+#### options.i
+`Int`
+
+Optional. Default is 1. Determines when to stop archiving trees of links and sources. If `options.i` > 1, options.hrefs will automatically be set to true.
+
+#### options.hrefs
+`Bool`
+
+Optional. If true, archive links, links of links, so on, stemming from the starting page. It will stop when options.i is depleted. Will automatically be set to true if `options.i` > 1.
+
+#### options.srcs
+`Bool`
+
+Optional. If true, archive sources of the starting page.
+
+#### options.after
+`Int`
+
+Optional. Represents a Unix timestamp in milliseconds. If `options.onUpload` is not set to false, skip upload of transactions if their webpage has already been archived after the specified timestamp.
+
+#### options.onUpload
+`Bool`
+
+Optional. If set to false, `.archive()` will not skip uploads according to `options.after`.
+
+### draftTx(options, res, page)
+Generates a draft transaction.
+
+#### options.url
+`String`
+
+The URL to start crawling from.
 
 #### options.key
 `Object`
-Arweave key object of an Arweave wallet.
 
-##### options.i
+Arweave key object to use for generating transactions.
+
+#### res
+[`<HTTPResponse>`](https://pptr.dev/api/puppeteer.httpresponse)
+
+#### page
+[`<Page>`](https://pptr.dev/api/puppeteer.page)
+
+#### options.after
 `Int`
-Optional. Default is 1. Determines when to stop archiving links and sources. If i > 1, options.hrefs will automatically be set to true.
 
-##### options.hrefs
-`Bool`
-Optional. If true, archive links, links of links, and links of links of links, so on. It will stop when options.i is depleted. Will automatically be set to true if i > 1.
+Optional. Represents a Unix timestamp in milliseconds. If `options.onUpload` is set to false, skip generation of webpage archive transaction if webpage has already been archived after the specified timestamp.
 
-##### options.after
-`Int`
-Optional. A Unix date. Only archive pages that have not been archived after this date.
+## License
 
-#### .draftTx()
+Copyright (c) Moogamouth 2022
+
+[AGPL-3.0](https://choosealicense.com/licenses/agpl-3.0/)
