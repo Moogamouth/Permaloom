@@ -29,20 +29,18 @@ Or with `import`:
 
 You need to provide values for host, port and protocol.
 
-You can start Permaloom in headful mode using the `headless` parameter like so:
-```js
-(async () => {
-    const permaloom = new require("permaloom")("arweave.net", 443, "https", false);
-})();
-```
+### Other class parameters
 
-Or using `import`:
-```js
-(async () => {
-    import permaloom from "permaloom";
-    const permaloom = new permaloom("arweave.net", 443, "https", false);
-})();
-```
+#### options.headless
+`Bool`
+
+Optional. Default is true. If false, starts crawling in headful mode.
+
+#### options.robotsNeutral
+
+`Bool`
+
+Optional. Default is true. Determines whether to crawl pages that are neutral according to robots.txt.
 
 ### .archive(options)
 Scrapes data from webpages according to `options`, and archives it to arweave.

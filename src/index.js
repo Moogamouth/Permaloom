@@ -2,10 +2,11 @@ import Yukikaki from "yukikaki";
 import Arweave from "arweave";
 export default class Permaloom {
 
-	constructor(host, port, protocol, headless) {
+	constructor(host, port, protocol, options) {
 		return Promise.resolve()
 		.then(async () => {
-			this.yukikaki = await new Yukikaki(headless);
+			options.userAgent = "Permaloom/0.2.0";
+			this.yukikaki = await new Yukikaki(options);
 			this.arweave = await Arweave.init({
 				host: host,
 				port: port,
@@ -30,7 +31,7 @@ export default class Permaloom {
 				cookies,
 				this.arweave.createTransaction({
 					data: await res.buffer(),
-					tags: [{"name":"Content-Type", "value":contentType}, {"name":"User-Agent","value":"Permaloom/1.0"}, {"name":"page:url","value":options.url}, {"name":"page:title","value":await page.title()}, {"name":"page:timestamp","value":`${Date.now()}`}, {"name":"page:cookiesId","value":cookies.id}]
+					tags: [{"name":"Content-Type", "value":contentType}, {"name":"User-Agent","value":"Permaloom/0.2.0"}, {"name":"page:url","value":options.url}, {"name":"page:title","value":await page.title()}, {"name":"page:timestamp","value":`${Date.now()}`}, {"name":"page:cookiesId","value":cookies.id}]
 				}, options.key)
 			];
 		}

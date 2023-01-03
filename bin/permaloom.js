@@ -17,6 +17,7 @@ import promptSync from "prompt-sync";
     --after, -a
     --userInput, -u Pauses crawler before crawling. Unpauses when enter is inputted into the command line. You can use this option to do things such as signing into a site.
     --robots, -r
+    --robotsNeutral, -R
 
     Examples
     $ archive https://www.youtube.com/watch?v=jNQXAC9IVRw <key> 1000000 -i 1 -h -a 1588230344423 -u
@@ -28,13 +29,14 @@ import promptSync from "prompt-sync";
             srcs: {type: "boolean", alias: "s"},
             after: {type: "number", alias: "a"},
             userInput: {type: "boolean", alias: "u"},
-            robots: {type: "boolean", alias: "r"}
+            robots: {type: "boolean", alias: "r"},
+            robotsNeutral: {type: "boolean", alias: "R"}
         }
     });
     
     if (cli.input[1]) var key = JSON.parse(JSON.stringify(cli.input[1]));
 
-    const permaloom = await new Permaloom("arweave.net", 443, "https", !cli.flags.userInput);
+    const permaloom = await new Permaloom("arweave.net", 443, "https", {headless: !cli.flags.userInput, robotsNeutral: cli.flags.robotsNeutral});
 
     if (cli.flags.userInput) promptSync()();
 
