@@ -1,5 +1,5 @@
 # Permaloom
-Node.js module that archives webpages to Arweave.
+Node.js package that archives webpages to Arweave.
 
 ## Installation
 Using [npm](https://www.npmjs.com/):
