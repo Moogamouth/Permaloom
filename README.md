@@ -86,12 +86,12 @@ Optional. Default is 1. Determines when to stop archiving trees of links and sou
 #### options.hrefs
 `Bool`
 
-Optional. If true, archive links, links of links, so on, stemming from the starting page. It will stop when options.i is depleted. Will automatically be set to true if `options.i` > 1.
+Optional. If true, scrape links, links of links, so on, stemming from the starting page. It will stop when options.i is depleted. Will automatically be set to true if `options.i` > 1.
 
 #### options.srcs
 `Bool`
 
-Optional. If true, archive sources of the starting page.
+Optional. If true, scrape sources of the starting page.
 
 #### options.after
 `Int`
@@ -102,6 +102,11 @@ Optional. Represents a Unix timestamp in milliseconds. If `options.onUpload` is 
 `Bool`
 
 Optional. If set to false, `.archive()` will not skip uploads according to `options.after`.
+
+#### options.robots
+`Bool`
+
+Optional. If true, only scrape pages in accordance with robots.txt.
 
 ### draftTx(options, res, page)
 Generates a draft transaction.
