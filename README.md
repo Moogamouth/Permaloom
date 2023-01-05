@@ -37,7 +37,6 @@ You need to provide values for host, port and protocol.
 Optional. Default is true. If false, starts crawling in headful mode.
 
 #### options.robotsNeutral
-
 `Bool`
 
 Optional. Default is true. Determines whether to crawl pages that are neutral according to robots.txt.
@@ -49,27 +48,6 @@ Scrapes data from webpages according to `options`, and archives it to arweave.
 `String`
 
 The URL to start crawling from.
-
-#### options.func(options, res, page)
-`Function`
-
-`.archive()` will run `options.func` on every webpage it crawls. `.archive()` will input the following values into `options.func`:
-
-`options`
-
-You can change this value's properties inside of `options.func`, except for `options.func` and `options.url`.
-
-Note: `options.i` will be decremented based on how many links or sources away the page is from the starting page.
-
-`res`
-[`<HTTPResponse>`](https://pptr.dev/api/puppeteer.httpresponse)
-
-Puppeteer response from the current page.
-
-`page`
-[`<Page>`](https://pptr.dev/api/puppeteer.page)
-
-Puppeteer page of the current page.
 
 #### options.maxFee
 `Int`
@@ -94,12 +72,12 @@ Optional. If true, scrape sources of the starting page.
 #### options.after
 `Int`
 
-Optional. Represents a Unix timestamp in milliseconds. If `options.onUpload` is not set to false, skip upload of transactions if their webpage has already been archived after the specified timestamp.
+Optional. Default is 0. Represents a Unix timestamp in milliseconds. If `options.onUpload` is not set to false, skip upload of transactions if the transaction's webpage has already been archived after `options.after`, otherwise skip generation of transactions.
 
 #### options.onUpload
 `Bool`
 
-Optional. If set to false, `.archive()` will not skip uploads according to `options.after`.
+If `options.onUpload` is not set to false, skip upload of transactions if the transaction's webpage has already been archived after `options.after`, otherwise skip generation of transactions.
 
 #### options.robots
 `Bool`

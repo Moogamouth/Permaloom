@@ -40,7 +40,5 @@ import promptSync from "prompt-sync";
 
     if (cli.flags.userInput) promptSync()();
 
-    const func = async function(options, res, page) {await permaloom.draftTx(options, res, page);}
-
-    await permaloom.archive({url: cli.input[0], func: func, key: key, maxFee: cli.input[2], i: cli.flags.i, hrefs: cli.flags.hrefs, srcs: cli.flags.srcs, after: cli.flags.after, robots: cli.flags.robots})
+    await permaloom.archive({url: cli.input[0], key: key, maxFee: cli.input[2], i: cli.flags.i, hrefs: cli.flags.hrefs, srcs: cli.flags.srcs, after: cli.flags.after, robots: cli.flags.robots})
 })();
