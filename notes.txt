@@ -1,0 +1,9 @@
+can edit:
+options.srcs
+options.hrefs
+can read:
+options.maxFee
+options.i
+res
+page
+we need to make sure that people can archive an array of sites and verify, or archive one at a time

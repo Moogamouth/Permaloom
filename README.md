@@ -39,7 +39,7 @@ Optional. Default is true. If false, starts crawling in headful mode.
 #### options.robotsNeutral
 `Bool`
 
-Optional. Default is true. Determines whether to crawl pages that are neutral according to robots.txt.
+Optional. Default is true. If `options.robots` is true, crawl pages that are neutral according to robots.txt.
 
 ### .archive(options)
 Scrapes data from webpages according to `options`, and archives it to arweave.
@@ -48,6 +48,27 @@ Scrapes data from webpages according to `options`, and archives it to arweave.
 `String`
 
 The URL to start crawling from.
+
+#### options.func(options, res, page)
+`Function`
+
+`.archive()` will run `options.func` on every webpage it crawls. `.archive()` will input the following values into `options.func`:
+
+`options.maxFee`
+
+`options.i`
+
+Note: `options.i` will be decremented based on how many links or sources away the page is from the starting page.
+
+`res`
+[`<HTTPResponse>`](https://pptr.dev/api/puppeteer.httpresponse)
+
+Puppeteer response from the current page.
+
+`page`
+[`<Page>`](https://pptr.dev/api/puppeteer.page)
+
+Puppeteer page of the current page.
 
 #### options.maxFee
 `Int`
@@ -69,44 +90,41 @@ Optional. If true, scrape links, links of links, so on, stemming from the starti
 
 Optional. If true, scrape sources of the starting page.
 
+#### options.uploadOnGen
+`Bool`
+
+Optional. Default is false. If `options.uploadOnGen` is true, transactions will be uploaded one by one, on generation. This means that `options.maxFee` will be applied to each transaction singularly, instead of summing up the fees of all tranactions. Also, upload of transactions will be skipped if the transaction's webpage has already been archived after `options.after`, otherwise skip generation of transactions if the transaction's webpage has already been archived after `options.after`.
+
 #### options.after
 `Int`
 
-Optional. Default is 0. Represents a Unix timestamp in milliseconds. If `options.onUpload` is not set to false, skip upload of transactions if the transaction's webpage has already been archived after `options.after`, otherwise skip generation of transactions.
-
-#### options.onUpload
-`Bool`
-
-If `options.onUpload` is not set to false, skip upload of transactions if the transaction's webpage has already been archived after `options.after`, otherwise skip generation of transactions.
+Optional. Default is 0. Represents a Unix timestamp in milliseconds. If `options.uploadOnGen` is not set to false, upload of transactions will be skipped if the transaction's webpage has already been archived after `options.after`, otherwise skip generation of transactions if the transaction's webpage has already been archived after `options.after`.
 
 #### options.robots
 `Bool`
 
-Optional. If true, only scrape pages in accordance with robots.txt.
+Optional. Default is false. If true, only scrape pages in accordance with robots.txt.
 
 ### draftTx(options, res, page)
 Generates a draft transaction.
 
 #### options.url
-`String`
-
-The URL to start crawling from.
 
 #### options.key
-`Object`
-
-Arweave key object to use for generating transactions.
 
 #### res
 [`<HTTPResponse>`](https://pptr.dev/api/puppeteer.httpresponse)
 
+Contains webpage data to archive.
+
 #### page
 [`<Page>`](https://pptr.dev/api/puppeteer.page)
 
-#### options.after
-`Int`
+Contains webpage data to archive.
 
-Optional. Represents a Unix timestamp in milliseconds. If `options.onUpload` is set to false, skip generation of webpage archive transaction if webpage has already been archived after the specified timestamp.
+#### options.uploadOnGen
+
+#### options.after
 
 ## License
 
