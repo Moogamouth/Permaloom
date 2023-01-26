@@ -1,4 +1,3 @@
-//todo: add customizable filters
 import meow from "meow";
 import Permaloom from "../src/index.js";
 import promptSync from "prompt-sync";
@@ -14,6 +13,7 @@ import promptSync from "prompt-sync";
     key [string] Key object string
     maxFee [number]
     --i, -i
+    --srcs, -s
     --hrefs, -h
     --uploadOnGen, -g
     --after, -a
@@ -27,8 +27,8 @@ import promptSync from "prompt-sync";
         importMeta: import.meta,
         flags: {
             i: {type: "number"},
-            hrefs: {type: "boolean", alias: "h"},
             srcs: {type: "boolean", alias: "s"},
+            hrefs: {type: "boolean", alias: "h"},
             uploadOnGen: {type: "boolean", alias: "g"},
             after: {type: "number", alias: "a"},
             userInput: {type: "boolean", alias: "u"},
@@ -43,5 +43,5 @@ import promptSync from "prompt-sync";
 
     if (cli.flags.userInput) promptSync()();
 
-    await permaloom.archive({url: cli.input[0], func: async function(options, res, page) {await permaloom.upload(await permaloom.draftTx(options, res, page));}, key: key, maxFee: cli.input[2], i: cli.flags.i, hrefs: cli.flags.hrefs, srcs: cli.flags.srcs, uploadOnGen: cli.flags.uploadOnGen, after: cli.flags.after, robots: cli.flags.robots})
+    await permaloom.archive({url: cli.input[0], func2: async function(vals, i, maxFee, res, page, options) {return {archive: true, srcs: true, hrefs: true}}, key: key, maxFee: cli.input[2], i: cli.flags.i, hrefs: cli.flags.hrefs, srcs: cli.flags.srcs, uploadOnGen: cli.flags.uploadOnGen, after: cli.flags.after, robots: cli.flags.robots})
 })();

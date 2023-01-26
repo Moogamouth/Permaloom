@@ -80,20 +80,15 @@ The maximum fee to pay for the archive, in winston. The archive will cancel if t
 
 Optional. Default is 1. Determines when to stop archiving trees of links and sources. If `options.i` > 1, options.hrefs will automatically be set to true.
 
-#### options.hrefs
-`Bool`
-
-Optional. If true, scrape links, links of links, so on, stemming from the starting page. It will stop when options.i is depleted. Will automatically be set to true if `options.i` > 1.
-
 #### options.srcs
 `Bool`
 
 Optional. If true, scrape sources of the starting page.
 
-#### options.uploadOnGen
+#### options.hrefs
 `Bool`
 
-Optional. Default is false. If `options.uploadOnGen` is true, transactions will be uploaded one by one, on generation. This means that `options.maxFee` will be applied to each transaction singularly, instead of summing up the fees of all tranactions. Also, upload of transactions will be skipped if the transaction's webpage has already been archived after `options.after`, otherwise skip generation of transactions if the transaction's webpage has already been archived after `options.after`.
+Optional. If true, scrape links, links of links, so on, stemming from the starting page. It will stop when options.i is depleted. Will automatically be set to true if `options.i` > 1.
 
 #### options.after
 `Int`
@@ -121,8 +116,6 @@ Contains webpage data to archive.
 [`<Page>`](https://pptr.dev/api/puppeteer.page)
 
 Contains webpage data to archive.
-
-#### options.uploadOnGen
 
 #### options.after
 

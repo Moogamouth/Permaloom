@@ -1,6 +1,5 @@
 import Yukikaki from "yukikaki";
 import Arweave from "arweave";
-import { arrayCompare } from "arweave/node/lib/merkle";
 export default class Permaloom {
 
 	constructor(host, port, protocol, options) {
@@ -19,8 +18,8 @@ export default class Permaloom {
 
 	async draftTx(options, res, page) {
 		let transactions = null;
-		if (options.uploadOnGen) while (!transactions) transactions = (await this.arweave.api.post("/graphql", {query: `query{transactions(sort:HEIGHT_DESC,tags:{name:"page:url",values:["${options.url}"]}){edges{node{tags{value}}}}}`})).data.data;
-		if (options.uploadOnGen == false || transactions.transactions?.edges[0]?.node?.tags[4]?.value && transactions.transactions?.edges[0]?.node?.tags[4]?.value < options.after) {
+		while (!transactions) transactions = (await this.arweave.api.post("/graphql", {query: `query{transactions(sort:HEIGHT_DESC,tags:{name:"page:url",values:["${options.url}"]}){edges{node{tags{value}}}}}`})).data.data;
+		if (transactions.transactions?.edges[0]?.node?.tags[4]?.value && transactions.transactions?.edges[0]?.node?.tags[4]?.value < options.after) {
 			let contentType = res.headers()["content-type"];
 			if (contentType.includes(";")) contentType = contentType.split(";")[0];
 
@@ -35,36 +34,34 @@ export default class Permaloom {
 					tags: [{"name":"Content-Type", "value":contentType}, {"name":"User-Agent","value":"Permaloom/0.2.3"}, {"name":"page:url","value":options.url}, {"name":"page:title","value":await page.title()}, {"name":"page:timestamp","value":`${Date.now()}`}, {"name":"page:cookiesId","value":cookies.id}]
 				}, options.key)
 			];
-			if (options.uploadOnGen == false || (arr[0].reward < options.maxFee && arr[1].reward < options.maxFee)) return arr;
-			if (options.uploadOnGen) this.upload(arr);
-		}
-	}
-
-	async upload(data) {
-		for (i of data) {
-			const uploader = await this.arweave.transactions.getUploader(await this.arweave.transactions.sign(i, options.key));
-			while (!uploader.isComplete) await uploader.uploadChunk();
+			fee += arr[0].reward + arr[1].reward;
+			if (fee < options.maxFee) {
+				let uploader = await this.arweave.transactions.getUploader(await this.arweave.transactions.sign(arr[0], options.key));
+				while (!uploader.isComplete) await uploader.uploadChunk();
+				uploader = await this.arweave.transactions.getUploader(await this.arweave.transactions.sign(arr[1], options.key));
+				while (!uploader.isComplete) await uploader.uploadChunk();
+			}
 		}
 	}
 
 	async archive(options) {
-		options.after = options.after ?? 0;
+		let options2 = options;
 
-		let data = await this.yukikaki.scrape(options);
+		options2.after = options2.after ?? 0;
 
-		if (!options.uploadOnGen) {
-			let fee = 0;
-			data2 = [];
-			for (i = 0; i < data.length; i+=2) {
-				while (!transactions) transactions = (await this.arweave.api.post("/graphql", {query: `query{transactions(sort:HEIGHT_DESC,tags:{name:"page:url",values:["${i.tags[2].value}"]}){edges{node{tags{value}}}}}`})).data.data;
-				if (transactions.transactions?.edges[0]?.node?.tags[4]?.value && transactions.transactions?.edges[0]?.node?.tags[4]?.value < options.after) {
-					data2.push(data[i]);
-					data2.push(data[i + 1]);
-				}
-			}
-			for (let i of data2) fee += i.reward;
-			if (fee < options.maxFee) this.upload(data2);
+		options2.func = async function(options, res, page) {
+			let vals = await options.func2(options.i, options.maxFee, res, page);
+			
+			if (vals.archive) await permaloom.draftTx(options, res, page);
+
+			console.log(vals.hrefs);
+			options2.srcs = vals.srcs;
+			options2.hrefs = vals.hrefs;
 		}
+
+		let fee = 0;
+		console.log(options2);
+		await this.yukikaki.scrape(options2);
 	}
 
 };
