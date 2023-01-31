@@ -31,15 +31,10 @@ You need to provide values for host, port and protocol.
 
 ### Other class parameters
 
-#### options.headless
+#### headless
 `Bool`
 
 Optional. Default is true. If false, starts crawling in headful mode.
-
-#### options.robotsNeutral
-`Bool`
-
-Optional. Default is true. If `options.robots` is true, crawl pages that are neutral according to robots.txt.
 
 ### .archive(options)
 Scrapes data from webpages according to `options`, and archives it to arweave.
@@ -49,16 +44,14 @@ Scrapes data from webpages according to `options`, and archives it to arweave.
 
 The URL to start crawling from.
 
-#### options.func(options, res, page)
+#### options.func(i, maxFee, res, page)
 `Function`
 
-`.archive()` will run `options.func` on every webpage it crawls. `.archive()` will input the following values into `options.func`:
+`.archive()` will run `options.func` on every webpage it crawls and returns `vals`.
 
-`options.maxFee`
+`i` and `maxFee` equate to the current values of `options.i` and `options.maxFee`.
 
-`options.i`
-
-Note: `options.i` will be decremented based on how many links or sources away the page is from the starting page.
+Note: `i` will be decremented based on how many links or sources away the page is from the starting page.
 
 `res`
 [`<HTTPResponse>`](https://pptr.dev/api/puppeteer.httpresponse)
@@ -90,6 +83,11 @@ Optional. If true, scrape sources of the starting page.
 
 Optional. If true, scrape links, links of links, so on, stemming from the starting page. It will stop when options.i is depleted. Will automatically be set to true if `options.i` > 1.
 
+#### options.uploadOnGen
+`Bool`
+
+Optional. If true, transactions will be uploaded one by one, on generation. This means that `options.maxFee` will be applied to each transaction singularly, instead of summing up the fees of all tranactions. Also, upload of transactions will be skipped if the transaction's webpage has already been archived after `options.after`, otherwise skip generation of transactions if the transaction's webpage has already been archived after `options.after`.
+
 #### options.after
 `Int`
 
@@ -98,7 +96,18 @@ Optional. Default is 0. Represents a Unix timestamp in milliseconds. If `options
 #### options.robots
 `Bool`
 
-Optional. Default is false. If true, only scrape pages in accordance with robots.txt.
+Optional. If true, only scrape pages in accordance with robots.txt.
+
+#### options.robotsNeutral
+
+`Bool`
+
+Optional. Default is true. Crawl pages that are neutral according to robots.txt.
+
+#### options.robotsSrcsHrefs
+`Bool`
+
+Optional. Default is true. Crawl links and sources even if the current page is not compatible with robots.txt.
 
 ### draftTx(options, res, page)
 Generates a draft transaction.
@@ -118,6 +127,8 @@ Contains webpage data to archive.
 Contains webpage data to archive.
 
 #### options.after
+
+#### options.uploadOnGen
 
 ## License
 

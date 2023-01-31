@@ -1,6 +1,6 @@
 {
   "name": "permaloom",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Node.js API that archives webpages, links, and sources to Arweave from URLs.",
   "main": "src/index.js",
   "bin": {
@@ -21,8 +21,8 @@
   "homepage": "https://github.com/Moogamouth/Permaloom#readme",
   "type": "module",
   "dependencies": {
-    "yukikaki": "^0.3.2",
-    "arweave": "^1.11.8",
+    "yukikaki": "^0.3.3",
+    "arweave": "^1.12.4",
     "meow": "^11.0.0",
     "prompt-sync": "^4.2.0"
   }

@@ -19,7 +19,8 @@ import promptSync from "prompt-sync";
     --after, -a
     --userInput, -u Pauses crawler before crawling. Unpauses when enter is inputted into the command line. You can use this option to do things such as signing into a site.
     --robots, -r
-    --robotsNeutral, -R
+    --robotsNeutral, -n
+    --robotsSrcsHrefs, -R
 
     Examples
     $ archive https://www.youtube.com/watch?v=jNQXAC9IVRw <key> 1000000 -i 1 -h -a 1588230344423 -u
@@ -33,15 +34,16 @@ import promptSync from "prompt-sync";
             after: {type: "number", alias: "a"},
             userInput: {type: "boolean", alias: "u"},
             robots: {type: "boolean", alias: "r"},
-            robotsNeutral: {type: "boolean", alias: "R"}
+            robotsNeutral: {type: "boolean", alias: "n"},
+            robotsSrcsHrefs: {type: "boolean", alias: "R"}
         }
     });
     
     if (cli.input[1]) var key = JSON.parse(JSON.stringify(cli.input[1]));
 
-    const permaloom = await new Permaloom("arweave.net", 443, "https", {headless: !cli.flags.userInput, robotsNeutral: cli.flags.robotsNeutral});
+    const permaloom = await new Permaloom("arweave.net", 443, "https", !cli.flags.userInput);
 
     if (cli.flags.userInput) promptSync()();
 
-    await permaloom.archive({url: cli.input[0], func2: async function(vals, i, maxFee, res, page, options) {return {archive: true, srcs: true, hrefs: true}}, key: key, maxFee: cli.input[2], i: cli.flags.i, hrefs: cli.flags.hrefs, srcs: cli.flags.srcs, uploadOnGen: cli.flags.uploadOnGen, after: cli.flags.after, robots: cli.flags.robots})
+    await permaloom.archive({url: cli.input[0], func: async function(i, maxFee, res, page) {return {archive: true, srcs: true, hrefs: true}}, key: key, maxFee: cli.input[2], i: cli.flags.i, hrefs: cli.flags.hrefs, srcs: cli.flags.srcs, uploadOnGen: cli.flags.uploadOnGen, after: cli.flags.after, robots: cli.flags.robots, robotsNeutral: cli.flags.robotsNeutral, robotsSrcsHrefs: cli.flags.robotsSrcsHrefs})
 })();
