@@ -1,6 +1,5 @@
 import Yukikaki from "yukikaki";
 import Arweave from "arweave";
-//import {exec} from child_process;
 export default class Permaloom {
 
 	constructor(host, port, protocol, headless) {
