@@ -63,6 +63,26 @@ Puppeteer response from the current page.
 
 Puppeteer page of the current page.
 
+`vals.archive`
+`Bool`
+
+Optional. Default is true. Draft an archive of the current page. Will be uploaded once scrape is finished.
+
+`vals.ytdl`
+`Bool`
+
+Optional. Sets `options.ytdl` for the current page.
+
+`vals.srcs`
+`Bool`
+
+Optional. Sets `options.srcs` for the current page.
+
+`vals.hrefs`
+`Bool`
+
+Optional. Sets `options.hrefs` for the current page.
+
 #### options.maxFee
 `Int`
 
@@ -76,7 +96,7 @@ Optional. Default is 1. Determines when to stop archiving trees of links and sou
 #### options.srcs
 `Bool`
 
-Optional. If true, scrape sources of the starting page.
+Optional. Default is true. Scrape sources of the starting page.
 
 #### options.hrefs
 `Bool`
@@ -109,26 +129,10 @@ Optional. Default is true. Crawl pages that are neutral according to robots.txt.
 
 Optional. Default is true. Crawl links and sources even if the current page is not compatible with robots.txt.
 
-### draftTx(options, res, page)
-Generates a draft transaction.
+#### options.ytdl
+`Bool`
 
-#### options.url
-
-#### options.key
-
-#### res
-[`<HTTPResponse>`](https://pptr.dev/api/puppeteer.httpresponse)
-
-Contains webpage data to archive.
-
-#### page
-[`<Page>`](https://pptr.dev/api/puppeteer.page)
-
-Contains webpage data to archive.
-
-#### options.after
-
-#### options.uploadOnGen
+Optional. If true, attempt to draft transactions of blob URLs inside of HTML <video> tags by running yt-dlp on the URL of the page that contains the tag. The transaction generated will use the blob URL as its URL.
 
 ## License
 

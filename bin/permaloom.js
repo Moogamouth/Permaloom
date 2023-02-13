@@ -21,6 +21,7 @@ import promptSync from "prompt-sync";
     --robots, -r
     --robotsNeutral, -n
     --robotsSrcsHrefs, -R
+    --ytdl, -y
 
     Examples
     $ archive https://www.youtube.com/watch?v=jNQXAC9IVRw <key> 1000000 -i 1 -h -a 1588230344423 -u
@@ -35,7 +36,8 @@ import promptSync from "prompt-sync";
             userInput: {type: "boolean", alias: "u"},
             robots: {type: "boolean", alias: "r"},
             robotsNeutral: {type: "boolean", alias: "n"},
-            robotsSrcsHrefs: {type: "boolean", alias: "R"}
+            robotsSrcsHrefs: {type: "boolean", alias: "R"},
+            ytdl: {type: "boolean", alias: "y"}
         }
     });
     
@@ -45,5 +47,9 @@ import promptSync from "prompt-sync";
 
     if (cli.flags.userInput) promptSync()();
 
-    await permaloom.archive({url: cli.input[0], func: async function(i, maxFee, res, page) {return {archive: true, srcs: true, hrefs: true}}, key: key, maxFee: cli.input[2], i: cli.flags.i, hrefs: cli.flags.hrefs, srcs: cli.flags.srcs, uploadOnGen: cli.flags.uploadOnGen, after: cli.flags.after, robots: cli.flags.robots, robotsNeutral: cli.flags.robotsNeutral, robotsSrcsHrefs: cli.flags.robotsSrcsHrefs})
+    if (!cli.flags.srcs) cli.flags.srcs = undefined;
+    if (!cli.flags.robotsNeutral) cli.flags.robotsNeutral = undefined;
+    if (!cli.flags.robotsSrcsHrefs) cli.flags.srcs = undefined;
+
+    await permaloom.archive({url: cli.input[0], func: async function(i, maxFee, res, page) {return {}}, key: key, maxFee: cli.input[2], i: cli.flags.i, hrefs: cli.flags.hrefs, srcs: cli.flags.srcs, uploadOnGen: cli.flags.uploadOnGen, after: cli.flags.after, robots: cli.flags.robots, robotsNeutral: cli.flags.robotsNeutral, robotsSrcsHrefs: cli.flags.robotsSrcsHrefs, ytdl: cli.flags.ytdl})
 })();
