@@ -1,6 +1,9 @@
 # Permaloom
 Heritrix wrapper that archives webpages to Arweave
 
+## Tip Jar
+Arweave: wh2smGGjsbXUM5a_58lwN3KTFo6JpuVvcibq5NbeqMY
+
 ## Installation
 Install [Heritrix](https://github.com/internetarchive/heritrix3).
 
