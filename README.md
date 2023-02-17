@@ -1,138 +1,56 @@
 # Permaloom
-Node.js package that archives webpages to Arweave.
+Heritrix wrapper that archives webpages to Arweave
 
 ## Installation
-Using [npm](https://www.npmjs.com/):
+Install [Heritrix](https://github.com/internetarchive/heritrix3).
 
-```bash
-npm install permaloom
-```
+Install [cURL](https://curl.se/).
+
+Download the latest [release](https://github.com/Moogamouth/Permaloom/releases) of Permaloom, and insert it into the Heritrix directory.
+
+Insert an Arweave key file entitled "`key.json`" into the Permaloom directory.
 
 ## Usage
 
-For a better understanding, read the Yukikaki [documentation](https://github.com/Moogamouth/Yukikaki#readme).
+To run Permaloom, simply run the Permaloom executable file. You will have to provide `metadata.operatorContactUrl` and seed values in the `crawler-beans.cxml` file.
 
-You can import Permaloom using `require`:
-```js
-(async () => {
-    const permaloom = new require("permaloom")("arweave.net", 443, "https");
-})();
+You can edit the `crawler-beans.cxml` and `config.json` files to change the crawl settings.
+
+The `crawler-beans.cxml` file will overwrite the one being used by Heritrix when Permaloom is executed. For more information on the `crawler-beans.cxml` file, go to [https://heritrix.readthedocs.io/en/latest/configuring-jobs.html](https://heritrix.readthedocs.io/en/latest/configuring-jobs.html).
+
+`config.json`
+
+Here is the default `config.json` file: 
+```json
+{
+    "host": "arweave.net",
+    "port": 443,
+    "addr": "https://localhost:8443/",
+    "username": "admin",
+    "password": "admin",
+    "maxFee": 100000000000000000
+}
 ```
 
-Or with `import`:
-```js
-(async () => {
-    import Permaloom from "permaloom";
-    await const permaloom = new Permaloom("arweave.net", 443, "https");
-})();
-```
+It contains all the values required in the `config.json` file.
 
-You need to provide values for host, port and protocol.
+`host`
 
-### Other class parameters
-
-#### headless
-`Bool`
-
-Optional. Default is true. If false, starts crawling in headful mode.
-
-### .archive(options)
-Scrapes data from webpages according to `options`, and archives it to arweave.
-
-#### options.url
 `String`
 
-The URL to start crawling from.
+The hostname of the Arweave gateway to use.
 
-#### options.func(i, maxFee, res, page)
-`Function`
+`port`
 
-`.archive()` will run `options.func` on every webpage it crawls and returns `vals`.
-
-`i` and `maxFee` equate to the current values of `options.i` and `options.maxFee`.
-
-Note: `i` will be decremented based on how many links or sources away the page is from the starting page.
-
-`res`
-[`<HTTPResponse>`](https://pptr.dev/api/puppeteer.httpresponse)
-
-Puppeteer response from the current page.
-
-`page`
-[`<Page>`](https://pptr.dev/api/puppeteer.page)
-
-Puppeteer page of the current page.
-
-`vals.archive`
-`Bool`
-
-Optional. Default is true. Draft an archive of the current page. Will be uploaded once scrape is finished.
-
-`vals.ytdl`
-`Bool`
-
-Optional. Sets `options.ytdl` for the current page.
-
-`vals.srcs`
-`Bool`
-
-Optional. Sets `options.srcs` for the current page.
-
-`vals.hrefs`
-`Bool`
-
-Optional. Sets `options.hrefs` for the current page.
-
-#### options.maxFee
 `Int`
 
-The maximum fee to pay for the archive, in winston. The archive will cancel if the amount is exceeded.
+The port of the Arweave gateway to use.
 
-#### options.i
+`maxFee`
+
 `Int`
 
-Optional. Default is 1. Determines when to stop archiving trees of links and sources. If `options.i` > 1, options.hrefs will automatically be set to true.
-
-#### options.srcs
-`Bool`
-
-Optional. Default is true. Scrape sources of the starting page.
-
-#### options.hrefs
-`Bool`
-
-Optional. If true, scrape links, links of links, so on, stemming from the starting page. It will stop when options.i is depleted. Will automatically be set to true if `options.i` > 1.
-
-#### options.uploadOnGen
-`Bool`
-
-Optional. If true, transactions will be uploaded one by one, on generation. This means that `options.maxFee` will be applied to each transaction singularly, instead of summing up the fees of all tranactions. Also, upload of transactions will be skipped if the transaction's webpage has already been archived after `options.after`, otherwise skip generation of transactions if the transaction's webpage has already been archived after `options.after`.
-
-#### options.after
-`Int`
-
-Optional. Default is 0. Represents a Unix timestamp in milliseconds. If `options.uploadOnGen` is not set to false, upload of transactions will be skipped if the transaction's webpage has already been archived after `options.after`, otherwise skip generation of transactions if the transaction's webpage has already been archived after `options.after`.
-
-#### options.robots
-`Bool`
-
-Optional. If true, only scrape pages in accordance with robots.txt.
-
-#### options.robotsNeutral
-
-`Bool`
-
-Optional. Default is true. Crawl pages that are neutral according to robots.txt.
-
-#### options.robotsSrcsHrefs
-`Bool`
-
-Optional. Default is true. Crawl links and sources even if the current page is not compatible with robots.txt.
-
-#### options.ytdl
-`Bool`
-
-Optional. If true, attempt to draft transactions of blob URLs inside of HTML <video> tags by running yt-dlp on the URL of the page that contains the tag. The transaction generated will use the blob URL as its URL.
+The maximum fee for the crawl, in Winston.
 
 ## License
 

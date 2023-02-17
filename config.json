@@ -1,0 +1,8 @@
+{
+    "host": "arweave.net",
+    "port": 443,
+    "addr": "https://localhost:8443/",
+    "username": "admin",
+    "password": "admin",
+    "maxFee": 100000000000000000
+}
