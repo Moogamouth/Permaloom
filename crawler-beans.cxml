@@ -37,7 +37,7 @@
 # This Properties map is specified in the Java 'property list' text format
 # http://java.sun.com/javase/6/docs/api/java/util/Properties.html#load%28java.io.Reader%29
 
-metadata.operatorContactUrl=ENTER_AN_URL_WITH_YOUR_CONTACT_INFO_HERE_FOR_WEBMASTERS_AFFECTED_BY_YOUR_CRAWL
+metadata.operatorContactUrl=https://pastebin.com/NwsZ9Afc
 metadata.jobName=basic
 metadata.description=Basic crawl starting with useful defaults
 
@@ -54,7 +54,7 @@ metadata.description=Basic crawl starting with useful defaults
     <prop key="seeds.textSource.value">
 
 # URLS HERE
-http://example.example/example
+https://www.sefaria.org/Genesis
 
     </prop>
    </props>
@@ -140,7 +140,7 @@ http://example.example/example
     <ref bean="acceptSurts" />
     <!-- ...but REJECT those more than a configured link-hop-count from start... -->
     <bean class="org.archive.modules.deciderules.TooManyHopsDecideRule">
-     <property name="maxHops" value="0" />
+     <!-- <property name="maxHops" value="20" /> -->
     </bean>
     <!-- ...but ACCEPT those more than a configured link-hop-count from start... -->
     <bean class="org.archive.modules.deciderules.TransclusionDecideRule">
